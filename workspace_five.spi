@@ -1,0 +1,156 @@
+m_sd = 2345432 # 87812322
+pat_sd = m_sd + 6322222
+sng_sd = m_sd + 899922
+kit_sd = m_sd + 9991
+kk_sd = m_sd + 999
+sn_sd = m_sd + 9929
+pc_sd = m_sd + 999
+kit_sd = m_sd + 999
+set_volume! 3
+use_random_seed sng_sd
+use_bpm rrand(40,80)
+key = rrand_i(50,62)
+mode = :minor
+set :cho_mo, :minor
+scl = (scale key, mode, octs: 1)
+b_scl = (scale key - 24, mode, octs: 1)
+chords = [1,1,1,1,1,1,1,2,3,3,4,4,4,5,5,5,6,6,6,6,7,7,7,7]
+cho_pro = [chords.choose, chords.choose, chords.choose, chords.choose, chords.choose, chords.choose, chords.choose, chords.choose]
+
+key_pat =
+live_loop :keys do
+  tick_reset
+  use_random_seed pat_sd
+  set :chomo, :minor
+  set :chord, (chord_degree 1, key, get[:chomo])
+  play_chord get[:chord]
+  sleep 0.25
+  play_chord get[:chord], amp: rand if one_in(8)
+  sleep 0.25
+  play_chord get[:chord], amp: rand if one_in(4)
+  sleep 0.25
+  play_chord get[:chord], amp: rand if one_in(8)
+  sleep 0.25
+  7.times do
+    tick if one_in(3)
+    set :chomo, :minor
+    set :chomo, :major if cho_pro[look] == 3
+    set :chomo, :major if cho_pro[look] == 6
+    set :chomo, :major if cho_pro[look] == 7
+    set :chord, (chord_invert (chord_degree cho_pro[look], key, get[:chomo], rrand_i(3,5)), rand_i(4))
+    play_chord get[:chord], amp: rand if one_in(4)
+    sleep 0.25
+    play_chord get[:chord], amp: rand if one_in(8)
+    sleep 0.25
+    play_chord get[:chord], amp: rand if one_in(4)
+    sleep 0.25
+    play_chord get[:chord], amp: rand if one_in(8)
+    sleep 0.25
+  end
+end
+
+live_loop :hatta do
+  soft_hats 4,4,8,9+pat_sd
+  soft_hats 4,4,8,99+pat_sd
+  soft_hats 4,4,8,9+pat_sd
+  soft_hats_fill 8,2,8,99+pat_sd
+  soft_hats 4,4,8,91+pat_sd
+  soft_hats 4,4,8,99+pat_sd
+  soft_hats 4,4,8,91+pat_sd
+  soft_hats_fill 16,1,8,99+pat_sd
+end
+
+
+live_loop :hatta2 do
+  soft_hats 6,8,8,9+pat_sd*2
+  soft_hats_fill 16,1,8,99+pat_sd*2
+end
+
+live_loop :drumma do
+  with_fx :level, amp: 1 do
+    use_bpm_mul 0.25
+    3.times do
+      drumb 4,6,kk_sd,sn_sd,pc_sd+54,pat_sd
+      drumb 3,2,kk_sd,sn_sd,pc_sd+55,pat_sd+3
+      drumb 2,1,kk_sd,sn_sd,pc_sd+58,pat_sd+3
+      drumb 4,6,kk_sd,sn_sd,pc_sd+59,pat_sd
+      drumb 8,1,kk_sd,sn_sd,pc_sd+58,pat_sd
+    end
+    drumb 4,6,kk_sd+1,sn_sd+1,pc_sd+54,pat_sd
+    drumb 2,3,kk_sd+1,sn_sd+1,pc_sd+56,pat_sd+3
+    drumb 2,1,kk_sd,sn_sd+1,pc_sd+56,pat_sd+5
+    drumb 4,6,kk_sd+1,sn_sd+1,pc_sd+57,pat_sd
+    drumb 2,3,kk_sd+1,sn_sd,pc_sd+57,pat_sd+3
+    drumb 2,1,kk_sd,sn_sd+1,pc_sd,+57,pat_sd+5
+  end
+end
+
+live_loop :drumma2 do
+  with_fx :level, amp: 0.5 do
+    use_bpm_mul 0.5
+    drumb 4,6,kk_sd*2,sn_sd*2,pc_sd*2+54,pat_sd*2
+    drumb 3,2,kk_sd*2,sn_sd*2,pc_sd*2+55,pat_sd*2+3
+    drumb 2,1,kk_sd*2,sn_sd*2,pc_sd*2+58,pat_sd*2+3
+    drumb 4,6,kk_sd*2,sn_sd*2,pc_sd*2+59,pat_sd*2
+    drumb 8,1,kk_sd*2,sn_sd*2,pc_sd*2+58,pat_sd*2
+  end
+end
+
+snares = "G:/Team Drives/Music Making/Share/Samples/Drums/Snare/**"
+snare = rand_i(999)
+use_random_seed pat_sd
+snare_pat = rand_i(9999)
+snare_speed = [0.5,1.0,2.0].choose
+live_loop :snar do
+  use_bpm_mul snare_speed
+  sleep 16
+  16.times do
+    use_random_seed snare_pat
+    sleep 0.25
+    sample snares, snare if one_in(12)
+    sleep 0.25
+    sample snares, snare if one_in(6)
+    sleep 0.25
+    sample snares, snare if one_in(12)
+    sleep 0.25
+    sample snares, snare
+    sleep 0.25
+    sample snares, snare if one_in(12)
+    sleep 0.25
+    sample snares, snare if one_in(6)
+    sleep 0.25
+    sample snares, snare if one_in(12)
+    sleep 0.25
+  end
+end
+
+
+live_loop :baz do
+  use_bpm_mul 0.5
+  use_random_seed sng_sd
+  use_synth [:sine, :tri, :chipbass, :pulse, :saw, :square].choose
+  use_synth_defaults release: 0.3
+  with_fx :distortion do
+    use_random_seed pat_sd
+    2.times do
+      b_sd = rand_i(99999)
+      4.times do
+        use_random_seed b_sd
+        4.times do
+          dachord = get[:chord]
+          play dachord.first - 24 unless one_in(5)
+          sleep 0.125
+          ##| bscl = (chord dachord.first - 36, get[:chomo], num_octaves: 2)
+          ##| play b_scl.choose if one_in(6)
+          play dachord.choose - 24 if one_in(5)
+          sleep 0.125
+          dachord = get[:chord]
+          play dachord.choose - 24 if one_in(5)
+          sleep 0.125
+          play dachord.choose - 24 if one_in(5)
+          sleep 0.125
+        end
+      end
+    end
+  end
+end

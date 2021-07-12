@@ -1,0 +1,102 @@
+# Welcome to Sonic Pi v3.1
+
+set_volume! 3
+
+kicks = "G:/Team Drives/Music Making/Share/Samples/Drums/Kick/Yheti Drums - Kicks/**"
+snares = "G:/Team Drives/Music Making/Share/Samples/Drums/Snare/Yheti Drums - Snares/**"
+percs = "G:/Team Drives/Music Making/Share/Samples/Drums/Percs and FX/Yheti Drums - Percusion/**"
+hats = "G:/Team Drives/Music Making/Share/Samples/Drums/Hats/Yheti Drums - Hats/**"
+
+define :kicka do |len, reps, drum_seed, patt_seed|
+  reps.times do
+    use_random_seed drum_seed
+    drum = rand_i(999)
+    use_random_seed patt_seed
+    len2 = len - 1
+    
+    sample kicks, drum, sustain: rrand(0.05,0.2), release: 0.1
+    sleep 0.125
+    sample kicks, drum, sustain: rrand(0.05,0.2), release: 0.1, amp: rand if one_in(6)
+    sleep 0.125
+    len2.times do
+      sample kicks, drum, sustain: rrand(0.05,0.2), release: 0.1 if one_in(3)
+      sleep 0.125
+      sample kicks, drum, sustain: rrand(0.05,0.2), release: 0.1, amp: rand if one_in(6)
+      sleep 0.125
+    end
+    
+  end
+end
+
+
+
+m_sd = 77228
+use_random_seed m_sd
+
+use_bpm rrand_i(30,60)
+
+
+live_loop :hatta do
+  with_fx :level, amp: 1 do
+    use_bpm_mul [0.25,0.5,1.0].choose
+    soft_hats 4,6,m_sd,m_sd
+    soft_hats_fill 4,6,m_sd,m_sd
+    soft_hats 4,6,m_sd,m_sd
+    soft_hats_fill 4,6,m_sd,m_sd+rand(999)
+  end
+end
+
+
+k_len = [2,4,8,16].choose
+k_rep = [16, 32].choose / k_len
+k_sam = rand_i(99999)
+k_pat = rand_i(99999)
+
+in_thread do
+  loop do
+    use_bpm_mul [0.5,1.0,2.0].choose
+    use_random_seed m_sd
+    kicka k_len, k_rep, k_sam, k_pat
+    kicka k_len, k_rep, k_sam, k_pat + rand_i(999)
+    kicka k_len, k_rep, k_sam, k_pat
+    kicka k_len, k_rep, k_sam, k_pat + rand_i(999)
+  end
+end
+
+define :snarer do |len, reps, drum_seed, patt_seed|
+  reps.times do
+    use_random_seed drum_seed
+    drum = rand_i(999)
+    use_random_seed patt_seed + 8888
+    len.times do
+      sleep 0.0625
+      sample snares, drum, amp: rrand(0,0.6) if one_in(20)
+      sleep 0.0625
+      sample snares, drum, amp: rand if one_in(10)
+      sleep 0.0625
+      sample snares, drum, amp: rrand(0,0.6) if one_in(20)
+      sleep 0.0625
+      sample snares, drum unless one_in(3)
+      sleep 0.0625
+      sample snares, drum, amp: rrand(0,0.6) if one_in(20)
+      sleep 0.0625
+      sample snares, drum, amp: rand if one_in(10)
+      sleep 0.0625
+      sample snares, drum, amp: rrand(0,0.6) if one_in(20)
+      sleep 0.0625
+    end
+    
+  end
+end
+s_len = [4,8].choose
+s_rep = 32 / s_len
+s_sam = rand_i(99999)
+s_pat = rand_i(99999)
+loop do
+  use_bpm_mul [0.5,1.0].choose
+  use_random_seed m_sd
+  snarer s_len, s_rep, s_sam, s_pat
+  snarer s_len, s_rep, s_sam, s_pat + rand_i(999)
+  snarer s_len, s_rep, s_sam, s_pat
+  snarer s_len, s_rep, s_sam, s_pat + rand_i(999)
+end

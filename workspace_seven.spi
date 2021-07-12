@@ -1,0 +1,187 @@
+# Welcome to Sonic Pi v3.1
+masta_seed = 8666765
+use_random_seed masta_seed
+use_bpm rrand_i(60, 120)
+chord1 = [1,4].choose
+chord_nums = [ rrand_i(1,6), rrand_i(1,6), rrand_i(1,6), rrand_i(1,6), rrand_i(1,6), rrand_i(1,6), rrand_i(1,6), rrand_i(1,6)]
+chord_nams = [chord_names.choose, chord_names.choose, chord_names.choose, chord_names.choose, chord_names.choose, chord_names.choose, chord_names.choose, chord_names.choose]
+scale_nam = :major if chord1 = 1
+scale_nam = :minor if chord1 = 4
+scale_num = rrand_i(48, 60)
+notes = (scale scale_num, scale_nam, oct: dice(3))
+bassnotes = (scale scale_num - 24, scale_nam, oct: dice(2))
+
+live_loop :chords do
+  use_random_seed masta_seed
+  2.times do
+    use_synth synth_names.choose
+    use_synth_defaults release: 0.5
+    use_random_seed masta_seed
+    tick_reset
+    spacing = [0.25,0.5, 0.75].choose
+    set :chordnum, notes[chord1]
+    set :chordnam, chord_nams[look]
+    set :chord, chord(notes[chord1], chord_nams[look])
+    play_chord get[:chord]
+    sleep spacing
+    play_chord get[:chord] if one_in(4)
+    puts 1.0 - spacing
+    sleep 1.0 - spacing
+    play_chord get[:chord] if one_in(2)
+    sleep spacing
+    play_chord get[:chord] if one_in(4)
+    sleep 1.0 - spacing
+    spacing = [0.25,0.5, 0.75].choose
+    4.times do
+      tick if one_in(3)
+      set :chordnum, chord_nums[look]
+      set :chordnam, chord_nams[look]
+      play_chord chord(notes[get[:chordnum]], chord_nams[look], invert: rand_i(4)) if one_in(3)
+      sleep spacing
+      play_chord chord(notes[get[:chordnum]], chord_nams[look], invert: rand_i(4)) if one_in(2)
+      sleep 1.0 - spacing
+      play_chord chord(notes[get[:chordnum]], chord_nams[look], invert: rand_i(4)) if one_in(3)
+      sleep spacing
+      play_chord chord(notes[get[:chordnum]], chord_nams[look], invert: rand_i(4)) if one_in(2)
+      sleep 1.0 - spacing
+      play_chord chord(notes[get[:chordnum]], chord_nams[look], invert: rand_i(4)) if one_in(3)
+      sleep spacing
+      play_chord chord(notes[get[:chordnum]], chord_nams[look], invert: rand_i(4)) if one_in(2)
+      sleep 1.0 - spacing
+    end
+    spacing = [0.25,0.5, 0.75].choose
+    set :chordnum, notes[chord1]
+    set :chordnam, chord_nams[look]
+    set :chord, chord(notes[chord1], chord_nams[look])
+    play_chord get[:chord] if one_in(4)
+    sleep spacing
+    play_chord get[:chord] if one_in(3)
+    puts 1.0 - spacing
+    sleep 1.0 - spacing
+    play_chord get[:chord] if one_in(2)
+    sleep spacing
+    play_chord get[:chord] if one_in(4)
+    sleep 1.0 - spacing
+  end
+end
+live_loop :baz do
+  use_synth :sine
+  use_synth_defaults release: 0.3
+  with_fx :distortion do
+    use_random_seed masta_seed
+    tick_reset
+    4.times do
+      dachord = chord(get[:chordnum], get[:chordnam])
+      play dachord.first
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(3)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(2)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(3)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+    end
+    use_random_seed masta_seed + 88
+    tick_reset
+    4.times do
+      dachord = chord(get[:chordnum], get[:chordnam])
+      play dachord.first
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(3)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(2)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(3)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+    end
+    use_random_seed masta_seed
+    tick_reset
+    4.times do
+      dachord = chord(get[:chordnum], get[:chordnam])
+      play dachord.first
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(3)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(2)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(3)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+    end
+    use_random_seed masta_seed + 8888
+    tick_reset
+    4.times do
+      dachord = chord(get[:chordnum], get[:chordnam])
+      play dachord.first
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(3)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(2)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+      play dachord.choose if one_in(3)
+      sleep 0.25
+      play bassnotes.choose if one_in(6)
+      sleep 0.25
+    end
+  end
+end
+live_loop :hatta do
+  with_fx :level, amp: 2 do
+    use_bpm_mul 0.5
+    soft_hats 4,6,masta_seed,masta_seed
+    soft_hats_fill 4,6,masta_seed,masta_seed
+    soft_hats 4,6,masta_seed,masta_seed
+    soft_hats_fill 4,6,masta_seed,masta_seed+99
+  end
+end
+live_loop :drumma do
+  with_fx :level, amp: 1 do
+    use_bpm_mul 0.25
+    drumb 4,6,masta_seed,masta_seed,masta_seed+54,masta_seed
+    drumb 3,2,masta_seed,masta_seed,masta_seed+55,masta_seed
+    drumb 2,1,masta_seed,masta_seed,masta_seed+58,masta_seed
+    drumb 4,6,masta_seed,masta_seed,masta_seed+59,masta_seed
+    drumb 8,1,masta_seed,masta_seed,masta_seed+58,masta_seed
+  end
+end
+##| live_loop :melo do
+##| use_random_seed masta_seed
+##|   use_synth :chiplead
+##|   play_chord chord(notes[chord_nums[0]], chord_nams[0])
+##|   sleep 1
+##|   play_chord chord(notes[chord_nums[1]], chord_nams[1])
+##|   sleep 1
+##|   play_chord chord(notes[chord_nums[2]], chord_nams[2])
+##|   sleep 1
+##|   play_chord chord(notes[chord_nums[3]], chord_nams[3])
+##|   sleep 1
+##| end

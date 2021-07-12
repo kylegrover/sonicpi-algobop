@@ -1,0 +1,193 @@
+m_sd = 222
+sng_sd = m_sd + 900232
+pat_sd = m_sd + 8222222
+kit_sd = m_sd + 89791
+kc_sd = kit_sd + 89889
+sn_sd = kit_sd + 89889
+pc_sd = kit_sd + 89889
+use_random_seed m_sd
+use_bpm rrand(40,80)
+key = rrand_i(50,62)
+mode = :major
+scl = (scale key, mode, octs: dice(3))
+b_scl = (scale key - 24, mode, octs: dice(2))
+chords = [1,2,3,4,5]
+cho_pro = [chords.choose, chords.choose, chords.choose, chords.choose, chords.choose, chords.choose]
+
+key_synths = [:zawa,:tech_saws,:pulse,:prophet,:pretty_bell,:pluck,:piano,:hollow,:fm,:dpulse,:dsaw,:dtri,:chiplead,:beep,:square,:supersaw,:saw,:sine]
+live_loop :keys do
+  tick_reset
+  use_random_seed m_sd
+  use_synth key_synths.choose
+  set :chord, (chord_degree 1, key, :major)
+  play_chord get[:chord]
+  sleep 0.25
+  play_chord get[:chord], amp: rand if one_in(8)
+  sleep 0.25
+  play_chord get[:chord], amp: rand if one_in(4)
+  sleep 0.25
+  play_chord get[:chord], amp: rand if one_in(8)
+  sleep 0.25
+  6.times do
+    tick if one_in(3)
+    use_synth key_synths.choose if one_in(8)
+    cho_mo = :major
+    cho_mo = :minor if cho_pro[look] == 2
+    cho_mo = :minor if cho_pro[look] == 3
+    set :chord, (chord_degree cho_pro[look], key, cho_mo)
+    play_chord get[:chord], amp: rand if one_in(4)
+    sleep 0.25
+    play_chord get[:chord], amp: rand if one_in(8)
+    sleep 0.25
+    play_chord get[:chord], amp: rand if one_in(4)
+    sleep 0.25
+    play_chord get[:chord], amp: rand if one_in(8)
+    sleep 0.25
+  end
+  set :chord, (chord_degree [4,5].choose, key, :major)
+  play_chord get[:chord]
+  sleep 0.5
+  play_chord get[:chord]
+  sleep 0.5
+end
+
+live_loop :hatta do
+  soft_hats 4,4,8,9
+  soft_hats 4,4,8,99
+  soft_hats 4,4,8,9
+  soft_hats_fill 8,2,8,99
+end
+
+live_loop :drumma do
+  with_fx :level, amp: 1 do
+    use_bpm_mul 0.25
+    drumb 4,6,kc_sd,sn_sd,pc_sd+54,pat_sd
+    drumb 3,2,kc_sd,sn_sd,pc_sd+55,pat_sd+3
+    drumb 2,1,kc_sd,sn_sd,pc_sd+58,pat_sd+3
+    drumb 4,6,kc_sd,sn_sd,pc_sd+59,pat_sd
+    use_bpm_mul 0.5
+    drumb 8,1,kc_sd,sn_sd,pc_sd+58,pat_sd
+    use_bpm_mul 1.0
+    drumb 4,4,kc_sd,sn_sd,pc_sd+58,pat_sd
+  end
+end
+
+bass_synths = [:sine, :tri, :chipbass, :dpulse, :dtri]
+live_loop :baz do
+  use_synth bass_synths.choose
+  with_fx :distortion do
+    use_random_seed sng_sd
+    2.times do
+      use_synth bass_synths.choose
+      2.times do
+        use_random_seed rand(99999)
+        4.times do
+          dachord = get[:chord]
+          play dachord.first - 24, release: rrand(0.1,0.3), cutoff: rrand_i(50,100)
+          sleep 0.125
+          play b_scl.choose, release: rrand(0.1,0.3), cutoff: rrand_i(50,100), amp: rrand(0.3,0.9) if one_in(6)
+          sleep 0.125
+          dachord = get[:chord]
+          play dachord.choose - 24, release: rrand(0.1,0.3), cutoff: rrand_i(50,100), amp: rrand(0.3,0.9) if one_in(3)
+          sleep 0.125
+          play b_scl.choose, release: rrand(0.1,0.3), cutoff: rrand_i(50,100), amp: rrand(0.3,0.9) if one_in(6)
+          sleep 0.125
+          dachord = get[:chord]
+          play dachord.choose - 24, release: rrand(0.1,0.3), cutoff: rrand_i(50,100), amp: rrand(0.3,0.9) if one_in(2)
+          sleep 0.125
+          play b_scl.choose, release: rrand(0.1,0.3), cutoff: rrand_i(50,100), amp: rrand(0.3,0.9) if one_in(6)
+          sleep 0.125
+          dachord = get[:chord]
+          play dachord.choose - 24, release: rrand(0.1,0.3), cutoff: rrand_i(50,100), amp: rrand(0.3,0.9) if one_in(3)
+          sleep 0.125
+          play b_scl.choose, release: rrand(0.1,0.3), cutoff: rrand_i(50,100), amp: rrand(0.3,0.9) if one_in(6)
+          sleep 0.125
+        end
+      end
+    end
+  end
+end
+
+live_loop :melo do
+  use_synth key_synths.choose
+  with_fx :distortion do
+    use_random_seed sng_sd
+    4.times do
+      use_synth key_synths.choose if one_in(3)
+      4.times do
+        use_random_seed rand(99999)
+        2.times do
+          dachord = get[:chord]
+          play dachord.first + (12*[-1,0,1,2].choose), release: rrand(0.1,0.3), cutoff: rrand_i(50,120), amp: rrand(0.5,0.8) if one_in(5)
+          sleep 0.125
+          play scl.choose, release: rrand(0.1,0.3), cutoff: rrand_i(50,120), amp: rrand(0.2,0.9) if one_in(5)
+          sleep 0.125
+          dachord = get[:chord]
+          play dachord.choose + (12*[-1,0,1,2].choose), release: rrand(0.1,0.3), cutoff: rrand_i(50,120), amp: rrand(0.2,0.9) if one_in(5)
+          sleep 0.125
+          play scl.choose, release: rrand(0.1,0.3), cutoff: rrand_i(50,120), amp: rrand(0.2,0.9) if one_in(5)
+          sleep 0.125
+          dachord = get[:chord]
+          play dachord.choose + (12*[-1,0,1,2].choose), release: rrand(0.1,0.3), cutoff: rrand_i(50,120), amp: rrand(0.2,0.9) if one_in(5)
+          sleep 0.125
+          play scl.choose, release: rrand(0.1,0.3), cutoff: rrand_i(50,120), amp: rrand(0.2,0.9) if one_in(5)
+          sleep 0.125
+          dachord = get[:chord]
+          play dachord.choose + (12*[-1,0,1,2].choose), release: rrand(0.1,0.3), cutoff: rrand_i(50,120), amp: rrand(0.2,0.9) if one_in(5)
+          sleep 0.125
+          play scl.choose, release: rrand(0.1,0.3), cutoff: rrand_i(50,120), amp: rrand(0.2,0.9) if one_in(5)
+          sleep 0.125
+        end
+      end
+    end
+  end
+end
+
+
+snares = "G:/Team Drives/Music Making/Share/Samples/Drums/Snare/**"
+snare = rand_i(999)
+use_random_seed sng_sd
+snare_pat = rand_i(9999)
+snare_speed = [1.0,2.0].choose
+live_loop :snar do
+  use_bpm_mul snare_speed
+  sleep 16
+  8.times do
+    use_random_seed snare_pat
+    2.times do
+      sleep 0.25
+      sample snares, snare if one_in(15)
+      sleep 0.25
+      sample snares, snare if one_in(9)
+      sleep 0.25
+      sample snares, snare if one_in(15)
+      sleep 0.25
+      sample snares, snare
+      sleep 0.25
+      sample snares, snare if one_in(15)
+      sleep 0.25
+      sample snares, snare if one_in(9)
+      sleep 0.25
+      sample snares, snare if one_in(15)
+      sleep 0.25
+    end
+    use_random_seed rand(99999)
+    2.times do
+      sleep 0.25
+      sample snares, snare if one_in(15)
+      sleep 0.25
+      sample snares, snare if one_in(9)
+      sleep 0.25
+      sample snares, snare if one_in(15)
+      sleep 0.25
+      sample snares, snare
+      sleep 0.25
+      sample snares, snare if one_in(15)
+      sleep 0.25
+      sample snares, snare if one_in(9)
+      sleep 0.25
+      sample snares, snare if one_in(15)
+      sleep 0.25
+    end
+  end
+end

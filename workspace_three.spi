@@ -1,0 +1,30 @@
+use_random_seed 999
+
+scl = (scale :E3, :minor, octs: 2)
+chd = (chord :E3, :m9)
+
+use_synth [:pluck, :piano].choose
+live_loop :poly do
+  ran_sd = rand(9999999)
+  [2,4,8].choose.times do
+    use_random_seed ran_sd
+    [4,8,16].choose.times do
+      with_bpm_mul 2 do
+        at [0,1] do
+          play chd.first, amp: rand
+        end
+      end
+      with_bpm_mul 3 do
+        at [0,1,2] do
+          play scl.choose, amp: rrand(0,0.5)
+        end
+      end
+      with_bpm_mul 5 do
+        at [0,1,2,3,4] do
+          play chd.choose, amp: rand
+        end
+      end
+      sleep 1.0
+    end
+  end
+end

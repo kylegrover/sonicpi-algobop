@@ -1,0 +1,134 @@
+# GLOBAL FUXNZ
+
+kicks = "G:/Team Drives/Music Making/Share/Samples/Drums/Kick/**"
+snares = "G:/Team Drives/Music Making/Share/Samples/Drums/Snare/**"
+percs = "G:/Team Drives/Music Making/Share/Samples/Drums/Percs and FX/**"
+hats = "G:/Team Drives/Music Making/Share/Samples/Drums/Hats/**"
+
+
+
+kicks = "G:/Team Drives/Music Making/Share/Samples/Drums/Kick/Yheti Drums - Kicks/**"
+snares = "G:/Team Drives/Music Making/Share/Samples/Drums/Snare/Yheti Drums - Snares/**"
+percs = "G:/Team Drives/Music Making/Share/Samples/Drums/Percs and FX/Yheti Drums - Percusion/**"
+hats = "G:/Team Drives/Music Making/Share/Samples/Drums/Hats/Yheti Drums - Hats/**"
+
+define :drumma do |len, reps, kick_seed, snare_seed, perc_seed, patt_seed|
+  reps.times do
+    use_random_seed kick_seed
+    kick = rand_i(999)
+    use_random_seed snare_seed
+    snare = rand_i(999)
+    use_random_seed perc_seed
+    perc = rand_i(999)
+    use_random_seed patt_seed
+    in_thread(name: :drumbing) do
+      len.times do
+        sample kicks, kick
+        sleep 1
+      end
+      len.times do
+        sleep 0.5
+        sample snares, snare
+        sleep 0.5
+        
+      end
+    end
+    (len * 4.0).times do
+      sample percs, perc if one_in(3)
+      sleep 0.25
+    end
+  end
+end
+
+define :drumb do |len,reps,kick_seed,snare_seed,perc_seed,patt_seed|
+  reps.times do
+    use_random_seed kick_seed
+    kick = rand_i(999)
+    use_random_seed snare_seed
+    snare = rand_i(999)
+    use_random_seed perc_seed
+    perc = rand_i(999)
+    use_random_seed patt_seed
+    len.times do
+      sample kicks, kick
+      sleep 0.125
+      sample kicks, kick if one_in(5)
+      sample snares, snare if one_in(3)
+      sample percs, perc if one_in(2)
+      sleep 0.0625
+      sample kicks, kick, amp: rand if one_in(10)
+      sample percs, perc if one_in(6)
+      sleep 0.0625
+      sample kicks, kick if one_in(5)
+      sample snares, snare, amp: rand if one_in(3)
+      sample percs, perc if one_in(2)
+      sleep 0.125
+      sample kicks, kick if one_in(5)
+      sample snares, snare, amp: rand if one_in(3)
+      sample percs, perc if one_in(2)
+      sleep 0.125
+      sample snares, snare if one_in(2)
+      sample kicks, kick if one_in(2)
+      sleep 0.125
+      sample kicks, kick if one_in(5)
+      sample snares, snare, amp: rand if one_in(3)
+      sample percs, perc if one_in(2)
+      sleep 0.0625
+      sample kicks, kick if one_in(10)
+      sample percs, perc if one_in(6)
+      sleep 0.0625
+      sample kicks, kick if one_in(5)
+      sample snares, snare if one_in(3)
+      sample percs, perc if one_in(2)
+      sleep 0.125
+      sample kicks, kick, amp: rand if one_in(5)
+      sample snares, snare, amp: rand if one_in(3)
+      sample percs, perc, amp: rand if one_in(2)
+      sleep 0.0625
+      sample kicks, kick, amp: rand if one_in(10)
+      sample snares, snare, amp: rand if one_in(13)
+      sample percs, perc, amp: rand if one_in(6)
+      sleep 0.0625
+    end
+  end
+end
+
+define :soft_hats do |len,reps,hat_sd,seed|
+  use_random_seed hat_sd
+  hat = rand_i(999)
+  reps.times do
+    use_random_seed seed
+    len.times do
+      hat_lvl = rrand(0,0.5)
+      sample hats, hat, amp: hat_lvl, release: hat_lvl
+      sleep 0.125
+      hat_lvl *= rand
+      sample hats, hat, amp: hat_lvl, release: hat_lvl
+      sleep 0.125
+    end
+  end
+end
+define :soft_hats_fill do |len,reps,hat_sd,seed|
+  use_random_seed hat_sd
+  hat = rand_i(999)
+  reps.times do
+    use_random_seed seed
+    (2*len).times do
+      hat_lvl = rrand(0,0.5)
+      sample hats, hat, amp: hat_lvl, release: hat_lvl
+      sleep 0.125
+    end
+  end
+end
+
+define :choppa do |reps,len,steps,stretch,file,seed|
+  reps.times do
+    use_random_seed seed
+    len.times do
+      s =  line(0, 1, steps: steps).choose
+      f = s + (1.0 / steps)
+      sample file, beat_stretch: stretch, start: s, finish: f
+      sleep 2.0  / steps
+    end
+  end
+end
