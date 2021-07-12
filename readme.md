@@ -14,11 +14,14 @@ Algobop also requires samples, you'll need to point it at your sample libraries.
 ## To Do / Plans / Ideas
 
 - Organize this repo lol
-- Should this run in Sonic Pi? Maybe there's something better for my needs
-- Automate song generation. Make many songs at once.
+- FX
+- Fills, Swells, Drops
+- Random "spice" samples
+- Add demo sample packs
 - More patterns/templates
 - Dynamic/generative patterns
-- Add demo sample packs
+- Automate song generation. Make many songs at once.
+- Should this run in Sonic Pi? Maybe there's something better for my needs
 
 ### License / Collaboration
 
